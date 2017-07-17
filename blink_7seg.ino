@@ -1,5 +1,11 @@
 //We always have to include the library
+#include <Wire.h>
 #include "LedControl.h"
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+
+//LiquidCrystal_I2C	lcd(0x27,2,1,0,4,5,6,7); // 0x27 is the I2C bus address for an unmodified backpack
+LiquidCrystal_I2C	lcd(0x27,2,1,0,1,2,6,7); // 0x27 is the I2C bus address for an unmodified backpack
 
 /*
  Now we need a LedControl to work with.
@@ -24,6 +30,10 @@ void setup() {
   lc.setIntensity(0,8);
   /* and clear the display */
   lc.clearDisplay(0);
+  // activate LCD module
+  lcd.begin (16,2); // for 16 x 2 LCD module
+  lcd.setBacklightPin(3,POSITIVE);
+  lcd.setBacklight(HIGH);
 }
 
 
@@ -46,8 +56,18 @@ void display8integer(LedControl target_lc, int number)
 
 }
 
+/**
+ *
+ * メインループ
+ */
 void loop() { 
-  // scrollDigits();
   display8integer(lc,12345);
-  delay(1000);
+  delay(1000);  
+  
+  lcd.home (); // set cursor to 0,0
+  lcd.print(" tronixlabs.com"); 
+  lcd.setCursor (0,1);        // go to start of 2nd line
+  lcd.print(millis());
+
+
 }
